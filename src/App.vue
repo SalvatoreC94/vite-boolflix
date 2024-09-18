@@ -37,30 +37,48 @@ export default {
         v-model="searchtext"
         type="text"
         class="form-control me-2"
-        placeholder="Cerca film o serie"
-      />
+        placeholder="Cerca film o serie"/>
       <button type="submit" class="btn btn-primary">Cerca</button>
     </form>
 
     <!-- Movies List -->
-    <div v-if="movies.length > 0">
-      <h3 class="mb-3">Risultati:</h3>
-      <div class="list-group">
-        <a
-          v-for="(movie, index) in movies"
-          :key="index"
-          class="list-group-item list-group-item-action">
-          <h5 class="mb-1">{{ movie.title || movie.name }}</h5>
-          <p class="mb-1">
-            <strong>Titolo Originale:</strong> {{ movie.original_title || movie.original_name }}
-          </p>
-          <p class="mb-1">
-            <strong>Lingua:</strong> {{ movie.original_language }}
-          </p>
-          <small><strong>Voto:</strong> {{ movie.vote_average }}</small>
-        </a>
-      </div>
-    </div>
+
+    <div class="list-group">
+  <div
+    v-for="(movie, index) in movies" :key="index"
+    class="list-group-item list-group-item-action">
+    
+    <h5 class="mb-1">{{ movie.title || movie.name}}</h5>
+    
+    <p class="mb-1"> 
+      <strong>Titolo Originale:</strong> {{ movie.original_title || movie.original_name}}
+     
+    </p>
+    
+    <p class="mb-1">
+     
+      <template v-if=" movie.original_language == 'en'">
+  <strong>Lingua:</strong> <img src="/img/flags/en.jpg" alt="">
+</template>
+<template v-if=" movie.original_language == 'it'">
+  <strong>Lingua:</strong> <img src="/img/flags/it.jpg" alt="">
+</template>
+<template v-if=" movie.original_language == 'ja'">
+  <strong>Lingua:</strong> <img src="/img/flags/jp.png" alt="">
+</template>
+<template v-else>
+  <p class="mb-1">
+      <strong>Lingua:</strong> {{ movie.original_language || 'N/A' }}
+    </p>
+</template>
+   
+    </p>
+    
+    <small><strong>Voto:</strong> {{ movie.vote_average}}</small>
+    
+  </div>
+</div>
+    
 </div>
     
 </template>
@@ -81,6 +99,9 @@ export default {
 .list-group-item {
   border: 1px solid #ddd;
   margin-bottom: 10px;
+}
+img{
+  max-width: 40px;
 }
 
 </style>
