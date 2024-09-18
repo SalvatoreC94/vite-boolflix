@@ -1,88 +1,86 @@
 <script>
-/* 
-  Per importare ed utilizzare un componente dentro un altro devo SEMPRE seguire questi 3 passi:
-  1) Importazione del componente
-  2) Dichiarazione del componente
-  3) Utilizzo del componente
-*/
-// 1) Importazione del componente
 import axios from 'axios'
- 
+
 export default {
   data() {
-    return { 
-      apiKey:'e5b9f07cb974b5607241361f444c4724',
+    return {
+      apiKey: 'e5b9f07cb974b5607241361f444c4724',
       searchtext: '',
-      movies:[]
+      movies: []
     }
   },
-  // 2) Dichiarazione del componente
-  components: {
-    
-  },
   methods: {
-  search(){
-    console.log(this.searchtext);
-
-    axios
-    // .get('https://api.themoviedb.org/3/search/movie?api_key=' + this.apikey +'&query' + this.searchtext)
-    .get('https://api.themoviedb.org/3/search/movie',{
-      params:{
-       api_Key: this.apiKey,
-       query:this.searchttext,
-      }
-    })
-    .then((resp) => {
-    console.log(resp.data)
-
-    this.movies = resp.data.results
-    });
-  }
+    searchMovies() {
+      axios
+        .get('https://api.themoviedb.org/3/search/movie', {
+          params: {
+            api_key: this.apiKey,
+            query: this.searchtext
+          }
+        })
+        
+        .then(response => {
+          this.movies = response.data.results;
+        })
+        .catch(error => {
+          console.error("Errore nell'API:", error);
+        });
+    }
   }
 }
 </script>
 
 <template>
-  
-    <!-- 3) Utilizzo del componente -->
-    <div class="d-flex justify-content-between">
-<form @submit.prevent="search">
-  <input v-model="searchtext" type="text" placeholder="cerca film e serie">
-  <button type="submit">
-    cerca
-  </button>
-</form>
-    </div>
-    
+<div class="container mt-5">
+    <form @submit.prevent="searchMovies" class="d-flex mb-4">
+      <input
+        v-model="searchtext"
+        type="text"
+        class="form-control me-2"
+        placeholder="Cerca film o serie"
+      />
+      <button type="submit" class="btn btn-primary">Cerca</button>
+    </form>
 
-    <div>
-    <ol>
-      <li v-for="(movie, i) in movies" .Key="i">
-      <ul>
-        <li>
-          titolo:
-        </li>
-        <li>
-          titolo originale:
-        </li>
-        <li>
-          lingua:
-        </li>
-        <li>
-          voto:
-        </li>
-      </ul>
-      <hr>
-      </li>
-    </ol>
+    <!-- Movies List -->
+    <div v-if="movies.length > 0">
+      <h3 class="mb-3">Risultati:</h3>
+      <div class="list-group">
+        <a
+          v-for="(movie, index) in movies"
+          :key="index"
+          class="list-group-item list-group-item-action">
+          <h5 class="mb-1">{{ movie.title || movie.name }}</h5>
+          <p class="mb-1">
+            <strong>Titolo Originale:</strong> {{ movie.original_title || movie.original_name }}
+          </p>
+          <p class="mb-1">
+            <strong>Lingua:</strong> {{ movie.original_language }}
+          </p>
+          <small><strong>Voto:</strong> {{ movie.vote_average }}</small>
+        </a>
+      </div>
     </div>
+</div>
     
-      
- 
 </template>
 
+
+
 <style lang="scss">
-@use 'assets/scss/main' as *;
-// Import all of Bootstrap's CSS
+@use 'assets/scss/main' as * ;
+/*  Import all of Bootstrap's CSS */
 @import "bootstrap/scss/bootstrap";
+
+
+.container {
+  max-width: 800px;
+  margin: auto;
+}
+
+.list-group-item {
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+}
+
 </style>
