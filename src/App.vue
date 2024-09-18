@@ -6,37 +6,79 @@
   3) Utilizzo del componente
 */
 // 1) Importazione del componente
-import AppHeader from './components/AppHeader.vue';
-
+import axios from 'axios'
+ 
 export default {
   data() {
     return { 
-      count: 0
+      apiKey:'e5b9f07cb974b5607241361f444c4724',
+      searchtext: '',
+      movies:[]
     }
   },
   // 2) Dichiarazione del componente
   components: {
-    AppHeader
+    
   },
   methods: {
-    incrementCount() {
-      this.count++;
-    }
+  search(){
+    console.log(this.searchtext);
+
+    axios
+    // .get('https://api.themoviedb.org/3/search/movie?api_key=' + this.apikey +'&query' + this.searchtext)
+    .get('https://api.themoviedb.org/3/search/movie',{
+      params:{
+       api_Key: this.apiKey,
+       query:this.searchttext,
+      }
+    })
+    .then((resp) => {
+    console.log(resp.data)
+
+    this.movies = resp.data.results
+    });
+  }
   }
 }
 </script>
 
 <template>
-  <div>
+  
     <!-- 3) Utilizzo del componente -->
-    <AppHeader />
+    <div class="d-flex justify-content-between">
+<form @submit.prevent="search">
+  <input v-model="searchtext" type="text" placeholder="cerca film e serie">
+  <button type="submit">
+    cerca
+  </button>
+</form>
+    </div>
     
-    <main>
-      <button class="btn btn-primary" @click="incrementCount()">
-        {{ count }}
-      </button>
-    </main>
-  </div>
+
+    <div>
+    <ol>
+      <li v-for="(movie, i) in movies" .Key="i">
+      <ul>
+        <li>
+          titolo:
+        </li>
+        <li>
+          titolo originale:
+        </li>
+        <li>
+          lingua:
+        </li>
+        <li>
+          voto:
+        </li>
+      </ul>
+      <hr>
+      </li>
+    </ol>
+    </div>
+    
+      
+ 
 </template>
 
 <style lang="scss">
